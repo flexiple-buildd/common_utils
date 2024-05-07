@@ -2,13 +2,14 @@ require 'nokogiri'
 
 class TOCExtractor
   def self.extract_toc_from_string(data)
-    doc = Nokogiri::HTML(data)
+    doc = Nokogiri::HTML.fragment(data)
     add_ids_to_headings(doc)
     toc = extract_toc_from_headings(doc)
+    remove_toc_from_content(doc)
     { content: doc.to_html, table_of_contents: toc }
   rescue StandardError => e
     puts "Error processing content: #{e.message}"
-    { content: content, table_of_contents: [] }
+    { content: data, table_of_contents: [] }
   end
 
   private
@@ -29,6 +30,14 @@ class TOCExtractor
     end
 
     toc_items
+  end
+
+  def self.remove_toc_from_content(doc)
+    toc_heading = doc.at_css('h4')
+    return unless toc_heading && toc_heading.text.strip.downcase == 'table of contents'
+
+    toc_heading.next_element.remove
+    toc_heading.remove
   end
 
   def self.add_ids_to_headings(doc)
