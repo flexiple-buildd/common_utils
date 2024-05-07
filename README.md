@@ -7,13 +7,9 @@ Common Utils is a collection of utility functions for common tasks, including TO
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'common_utils', '~> 0.1.0'
+gem 'common_utils', '~> 0.1.0', github: 'flexiple-buildd/common_utils'
 ```
 
 And then execute
 
 $ bundle install
-
-Or install it yourself as:
-
-$ gem install common_utils
