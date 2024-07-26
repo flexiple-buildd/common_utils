@@ -2,14 +2,14 @@ PATH
   remote: .
   specs:
     common_utils (0.1.0)
-      nokogiri (~> 1.12)
+      nokogiri (~> 1.16)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    nokogiri (1.16.4-arm64-darwin)
+    nokogiri (1.16.6-arm64-darwin)
       racc (~> 1.4)
-    racc (1.7.3)
+    racc (1.8.0)
 
 PLATFORMS
   arm64-darwin-22
