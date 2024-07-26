@@ -43,7 +43,7 @@ class TOCExtractor
 
   def self.remove_toc_from_content(doc)
     toc_heading = doc.at_css('h4')
-    return unless toc_heading && toc_heading.text.strip.downcase == 'table of contents'
+    return unless toc_heading && toc_heading.text.strip.downcase.include?('table of contents')
 
     toc_heading.next_element.remove
     toc_heading.remove
