@@ -24,14 +24,20 @@ class TOCExtractor
       if heading.name == 'h2'
         current_parent = { text: heading.text.strip, href: "##{heading_id}", sub_items: [] }
         toc_items << current_parent
-        if hrefs.include?(current_parent[:href])
-          raise "Duplicate href found: #{current_parent[:href]}"
+        countOfHref = hrefs.count(current_parent[:href])
+        if(countOfHref > 0)
+          current_parent[:href] = "#{current_parent[:href]}-#{countOfHref}"
+          heading['id'] = "#{heading_id}-#{countOfHref}"
+        else
+          hrefs << current_parent[:href]
         end
-        hrefs << current_parent[:href]
       elsif heading.name == 'h3' && current_parent
         sub_item = { text: heading.text.strip, href: "##{heading_id}" }
-        if hrefs.include?(sub_item[:href])
-          raise "Duplicate href found: #{sub_item[:href]}"
+        if hrefs.count(sub_item[:href]) > 0
+          sub_item[:href] = "#{sub_item[:href]}-#{hrefs.count(sub_item[:href])}"
+          heading['id'] = "#{heading_id}-#{hrefs.count(sub_item[:href])}"
+        else
+          hrefs << sub_item[:href]
         end
         current_parent[:sub_items] << sub_item
         hrefs << sub_item[:href]
