@@ -4,8 +4,8 @@ class TOCExtractor
   def self.extract_toc_from_string(data)
     doc = Nokogiri::HTML.fragment(data)
     add_ids_to_headings(doc)
-    toc = extract_toc_from_headings(doc)
     remove_toc_from_content(doc)
+    toc = extract_toc_from_headings(doc)
     { content: doc.to_html, table_of_contents: toc }
   rescue StandardError => e
     puts "Error processing content: #{e.message}"
