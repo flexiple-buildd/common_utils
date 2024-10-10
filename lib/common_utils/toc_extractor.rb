@@ -4,6 +4,7 @@ class TOCExtractor
   def self.extract_toc_from_string(data)
     doc = Nokogiri::HTML.fragment(data)
     add_ids_to_headings(doc)
+    add_classes_to_pros_cons(doc)
     remove_toc_from_content(doc)
     toc = extract_toc_from_headings(doc)
     { content: doc.to_html, table_of_contents: toc }
@@ -56,6 +57,32 @@ class TOCExtractor
   def self.add_ids_to_headings(doc)
     doc.css('h2, h3').each do |heading|
       heading['id'] ||= generate_heading_id(heading)
+    end
+  end
+
+
+  def self.add_classes_to_pros_cons(doc)
+    doc.css('h2, h3, h4').each do |heading|
+      if heading.text.downcase.include?('pros')
+        next_element = heading.next_element
+        if next_element && next_element.name == 'ul'
+          next_element.css('li').each do |li|
+            unless li['class']&.include?('pros-li')
+              li['class'] = li['class'] ? "#{li['class']} pros-li" : 'pros-li'
+            end
+          end
+        end
+      end
+      if heading.text.downcase.include?('cons')
+        next_element = heading.next_element
+        if next_element && next_element.name == 'ul'
+          next_element.css('li').each do |li|
+            unless li['class']&.include?('cons-li')
+                li['class'] = li['class'] ? "#{li['class']} cons-li" : 'cons-li'
+            end
+          end
+        end
+      end
     end
   end
 
