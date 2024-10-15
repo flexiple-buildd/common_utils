@@ -63,7 +63,9 @@ class TOCExtractor
 
   def self.add_classes_to_li(doc)
     doc.css('li').each do |li|
-      li['class'] = li['class'] ? "#{li['class']} icon" : 'icon'
+      unless li['class']&.include?('icon')
+        li['class'] = li['class'] ? "#{li['class']} icon" : 'icon'
+      end
     end
     doc.css('h2, h3, h4').each do |heading|
       if heading.text.downcase.include?('pros')
