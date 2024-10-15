@@ -1,10 +1,10 @@
 require 'nokogiri'
 
 class TOCExtractor
-  def self.extract_toc_from_string(data)
+  def self.extract_toc_from_string(data, update_icons = false)
     doc = Nokogiri::HTML.fragment(data)
     add_ids_to_headings(doc)
-    add_classes_to_pros_cons(doc)
+    add_classes_to_li(doc) if update_icons
     remove_toc_from_content(doc)
     toc = extract_toc_from_headings(doc)
     { content: doc.to_html, table_of_contents: toc }
@@ -61,7 +61,12 @@ class TOCExtractor
   end
 
 
-  def self.add_classes_to_pros_cons(doc)
+  def self.add_classes_to_li(doc)
+    doc.css('li').each do |li|
+      unless li['class']&.include?('icon')
+        li['class'] = li['class'] ? "#{li['class']} icon" : 'icon'
+      end
+    end
     doc.css('h2, h3, h4').each do |heading|
       if heading.text.downcase.include?('pros')
         next_element = heading.next_element
